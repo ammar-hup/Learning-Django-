@@ -137,15 +137,24 @@ To work with models (database):
 6. The code will be something like this:
 
 ```
+from django.db import models
+
 class Product(models.Model):
     name = models.CharField(max_length=50)    # the product name
     content = models.TextField()              # the product content
     price = models.DecimalField(max_digits=6,decimal_places=2)    # product price
     image = models.ImageField(upload_to='photos/%y/%m/%d')        # product image
-    active = models.BooleanField(default=True)                  # product status (active / not active)
+    active = models.BooleanField(default=True)   
+    
+    def __str__(self):
+        return self.name               # product status (active / not active)
 ```
-
-7. For the image part, we will split the pics into folders named (year, month, day), and that will be helpful and increase our website speed. We will use (`upload_to='folder name </photo> /%y/%m/%d'`).
+7. Go to the settings file and add your new app to the INSTALLED_APPS list.
+8. To add the Product class to the database, run the following commands:
+8. `py manage.py makemigrations` to create a new migration file.
+8. `py manage.py migrate` to apply the migration and create the table in the database.
+9. Now, you can add, edit, or remove a product from the admin page. To access the admin page, go to localhost:8000/admin/ in your browser.
+10. For the image part, we will split the pics into folders named (year, month, day), and that will be helpful and increase our website speed. We will use (`upload_to='folder name </photo> /%y/%m/%d'`).
 
 ## Admin Panel
 
@@ -154,3 +163,46 @@ To make an administration account and manage your products:
 1. Run `py manage.py createsuperuser`
 2. Then, choose a name, email, and password
 3. Run the server and go to `/admin`
+
+## Displaying Products in a Website
+
+To display the products you added on a web page:
+
+1. Go to the templates folder and make a new folder named 'products'.
+2. Make two HTML files: product.html and products.html .
+3. Go to the views file in the product folder and make two methods (product, products):
+
+```
+from django.shortcuts import render
+from .models import Product
+
+def product(request):
+    return render(request, 'products/product.html')
+
+def products(request):
+    return render(request, 'products/products.html', {'productsName': Product.objects.all()})
+
+```
+4. Go to the products.html file and make a block content for the code and make a for loop on the products to view it:
+```
+{% block content %}
+    {% for x in productsName %}
+        <h1>{{x.name}}</h1>
+        <h5>{{x.content}}</h5>
+        <span>{{x.price}} $</span>
+    {% endfor %}
+{% endblock content %}
+
+```
+5. To add the URL for the products page, go to the urls.py file in the product folder and add the new URL:
+```
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.products, name='products'),
+    path('<int:product_id>/', views.product, name='product'),
+]
+
+```
+5.  Now, you can access the products page by going to localhost:8000/products/ in your browser.
