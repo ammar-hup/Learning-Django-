@@ -300,4 +300,4 @@ to active the media (images,videos) in the project
     static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)   
     ```
 5. now to make the image show up in the website by writing this to the html page:
-    `<img src="{{x.image.url}}" alt="">`
+    ```<img src="{{x.image.url}}" alt="">```
