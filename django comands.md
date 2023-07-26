@@ -300,4 +300,56 @@ to active the media (images,videos) in the project
     static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)   
     ```
 5. now to make the image show up in the website by writing this to the html page:
-    ```<img src="{{x.image.url}}" alt="">```
+    `<img src="{{x.image.url}}" alt="">`
+
+## Form With Django
+how to make a form in django anf recive the data and store it in the database
+
+1. we add the form in the templates for example `about.html` page cuz its empty : 
+    ```
+    {% block content %}
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <br>
+        <input type="text" name="username" placeholder="username">
+        <br>
+        <input type="password" name="password" placeholder="password">
+        <br>    
+        <input type="submit" value="save" >
+
+    </form>
+
+    {% endblock content %}
+    ```
+
+2. go to the `models.py` file and create new class for the form :
+    ```
+    class Login(models.Model):
+        username = models.CharField(max_length=20)
+        password = models.CharField(max_length=20, blank=False)
+    ```
+    and we need to import this `Login` class to the `views.py` so i can use it :
+    `from . models import Login`
+
+3. we go to `views.py` file to take the comming data and put it in models :
+   go to the function that controls the page we made the form in , in this case `about` and the parameter `request ` that we passed to the function it will have the data :
+
+   ```
+   def about(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    data = Login(username = username, password = password) # to store the data
+    data.save() # to save the data from the Login page
+    return render(request,'mainpage/about.html')
+
+   ```
+4. the we go to the `admin.py` file to save the models :
+    ```
+    from .models import Login
+
+    admin.site.register(Login)
+    ```
+    now the data will be in the `Logins` table in the adminstration database
+    
+
