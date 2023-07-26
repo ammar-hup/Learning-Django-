@@ -94,14 +94,22 @@ To use `if`, `elif`, `else`, `for` with HTML by blocks:
 To add images, CSS, and JS files to your project by static files:
 
 1. Make a folder named 'static' in your project
+
 2. Make a folder for each file you will add to your project (CSS, JS, images)
+
 3. Add the file to its folder 
+
 4. Go to `settings.py` file in the project to activate the static files
+
 5. Go to the `STATIC_URL` section and add the static folder path that you have created
-6. Write this line before the `STATIC_URL`: `STATIC_ROOT = os.path.join(BASE_DIR,'static')` that will put the file beside the project folder in the hierarchy
-7. Write this line after the `STATIC_URL`: `STATICFILES_DIR = [ os.path.join(BASE_DIR,'project/static') ]` that will identify it with the folder path
-8. Run the command `py manage.py collectstatic`
-9. That will create a new static folder in your hierarchy beside the project, and it will have a folder named `admin`
+
+6. Write these lines : 
+    `STATIC_ROOT = os.path.join(BASE_DIR,'static')` 
+    `STATIC_URL = 'static/'`
+    `STATICFILES_DIR = [ os.path.join(BASE_DIR,'project/static') ]`
+
+7. Run the command `py manage.py collectstatic`
+8. That will create a new static folder in your hierarchy beside the project, and it will have a folder named `admin`
 
 To enable these files to your HTML:
 
@@ -172,6 +180,11 @@ class Meta :
         # ordering = ['name']     # order the products by name
         ordering = ['price']      # order the products by price
 ```
+or u can order them by another way :
+```
+Product.objects.all().order_by('price')
+```
+
 6. to make a category feild we should make a list of tupels with 2 values with the same name 1 for the system and the other for the database :
 ```
 l = [
@@ -185,6 +198,29 @@ l = [
 
 ```
 
+7. to get the number of products :
+
+```
+return render(request,'products/products.html',{'productsName': str(Product.objects.all().count())})
+```
+
+8. to make exclude for objects :
+```
+Product.objects.all().exclude(price = 100)
+```
+
+9. to get the object that contains chars or numbers :
+```
+Product.objects.all().filter(name__contains = 'a')
+```
+or
+```
+Product.objects.all().filter(price__in =[10,100] )
+```
+or
+```
+Product.objects.all().filter(price__range =(10,100))
+```
 ## Displaying Products in a Website
 
 To display the products you added on a web page:
@@ -230,14 +266,34 @@ urlpatterns = [
 
 6. to get only one object use : 
 ```
-return render(request, 'products/products.html', {'productsName': Product.objects.get(name = 'realme')})
+Product.objects.get(name = 'realme')
 ```
 
 7. to add filter for the objects use :
     ```
-    return render(request,'products/products.html',{'productsName': Product.objects.all().filter(price = 50)})
+    Product.objects.all().filter(price = 50)
     ```
     In this case it will show all items with price equal to 50
     
 
-## 
+## Activate Media 
+
+to active the media (images,videos) in the project
+
+1. we go to the `settings.py` file in the project folder and go to the bottom after the `Static` section
+
+2. Write these lines : 
+    `MEDIA_ROOT = os.path.join(BASE_DIR,'media')`
+    `MEDIA_URL = '/media/'`
+
+3. we will go to the `urls.py` file in the project folder and import those :
+    `from django.conf import settings`
+    `from django.conf.urls.static import static`
+
+4. we will call `(MEDIA_ROOT , MEDIA_URL)` after we imported the static :
+    ```
+    urlpatterns = ["the content in it"] + 
+    static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)   
+    ```
+5. now to make the image show up in the website by writing this to the html page:
+    `<img src="{{x.image.url}}" alt="">`
