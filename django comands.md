@@ -140,14 +140,11 @@ To work with models (database):
 from django.db import models
 
 class Product(models.Model):
-    name = models.CharField(max_length=50)    # the product name
-    content = models.TextField()              # the product content
+    name = models.CharField(max_length=50,verbose_name'Title',default = 'Name')    # the product name
+    content = models.TextField(null = True, blank = True)              # the product content
     price = models.DecimalField(max_digits=6,decimal_places=2)    # product price
     image = models.ImageField(upload_to='photos/%y/%m/%d')        # product image
-    active = models.BooleanField(default=True)   
-    
-    def __str__(self):
-        return self.name               # product status (active / not active)
+    active = models.BooleanField(default=True)               # product status (active / not active)
 ```
 7. Go to the settings file and add your new app to the INSTALLED_APPS list.
 8. To add the Product class to the database, run the following commands:
@@ -163,6 +160,30 @@ To make an administration account and manage your products:
 1. Run `py manage.py createsuperuser`
 2. Then, choose a name, email, and password
 3. Run the server and go to `/admin`
+4. to view the products name on cards you can use :
+```
+def __str__(self):
+        return self.name    
+```
+5. to change anything in the `products` group you can use the Meta class:
+```
+class Meta :
+        verbose_name = "Product"  # the name in admin page
+        # ordering = ['name']     # order the products by name
+        ordering = ['price']      # order the products by price
+```
+6. to make a category feild we should make a list of tupels with 2 values with the same name 1 for the system and the other for the database :
+```
+l = [
+        ('mobile','mobile'),
+        ('laptop','laptop'),
+        ('accessories','accessories'),
+        ('headphones','headphones'),
+        ('camera','camera'),
+    ]
+    category = models.CharField(max_length=50, null=True, blank=True, choices=l)
+
+```
 
 ## Displaying Products in a Website
 
@@ -194,7 +215,7 @@ def products(request):
 {% endblock content %}
 
 ```
-5. To add the URL for the products page, go to the urls.py file in the product folder and add the new URL:
+5. To add the URL for the products page, go to the `urls.py` file in the product folder and add the new URL:
 ```
 from django.urls import path
 from . import views
@@ -205,4 +226,18 @@ urlpatterns = [
 ]
 
 ```
-5.  Now, you can access the products page by going to localhost:8000/products/ in your browser.
+5.  Now, you can access the products page by going to `localhost:8000/products/` in your browser.
+
+6. to get only one object use : 
+```
+return render(request, 'products/products.html', {'productsName': Product.objects.get(name = 'realme')})
+```
+
+7. to add filter for the objects use :
+    ```
+    return render(request,'products/products.html',{'productsName': Product.objects.all().filter(price = 50)})
+    ```
+    In this case it will show all items with price equal to 50
+    
+
+## 
