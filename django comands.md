@@ -104,9 +104,11 @@ To add images, CSS, and JS files to your project by static files:
 5. Go to the `STATIC_URL` section and add the static folder path that you have created
 
 6. Write these lines : 
-    `STATIC_ROOT = os.path.join(BASE_DIR,'static')` 
-    `STATIC_URL = 'static/'`
-    `STATICFILES_DIR = [ os.path.join(BASE_DIR,'project/static') ]`
+    ```
+    STATIC_ROOT = os.path.join(BASE_DIR,'static')
+    STATIC_URL = 'static/'
+    STATICFILES_DIR = [ os.path.join(BASE_DIR,'project/static') ]
+    ```
 
 7. Run the command `py manage.py collectstatic`
 8. That will create a new static folder in your hierarchy beside the project, and it will have a folder named `admin`
@@ -283,8 +285,10 @@ to active the media (images,videos) in the project
 1. we go to the `settings.py` file in the project folder and go to the bottom after the `Static` section
 
 2. Write these lines : 
-    `MEDIA_ROOT = os.path.join(BASE_DIR,'media')`
-    `MEDIA_URL = '/media/'`
+    ```
+    MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+    MEDIA_URL = '/media/'
+    ```
 
 3. we will go to the `urls.py` file in the project folder and import those :
     `from django.conf import settings`
