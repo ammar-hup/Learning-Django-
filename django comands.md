@@ -304,6 +304,9 @@ to active the media (images,videos) in the project
 
 ## Form With Django
 how to make a form in django anf recive the data and store it in the database
+we have many ways to do this with django 
+
+#### the first method
 
 1. we add the form in the templates for example `about.html` page cuz its empty : 
     ```
@@ -352,4 +355,80 @@ how to make a form in django anf recive the data and store it in the database
     ```
     now the data will be in the `Logins` table in the adminstration database
     
+
+#### the second method
+
+we will use a django liberary for the form
+
+1. make a file in the page folder named `forms.py` 
+
+2. go to `forms.py` and write :
+    ```
+    from django import forms
+
+    class Login(forms.Form):
+        username = forms.CharField(max_length=20)
+        password = forms.CharField(max_length=30)
+    ```
+    we have some attributes that we can use in the form
+    ```
+    # lable
+    # initial
+    # disabled
+    # help_text
+    # widget
+    # required
+    # for example : 
+    password = forms.CharField(max_length=30, label = 'pass', required = True, widget = forms.PasswordInput)
+
+
+    ```
+3. then go to `views.py` file to view the content it the website by the context method
+    ```
+    from . forms import LoginForm
+
+    def about(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    data = Login(username = username, password = password)
+    data.save()
+    return render(request,'mainpage/about.html' , {'LF' : LoginForm})
+    ```
+4. then go to the templates folder to the `about.html` file and write : 
+    ```
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{LF}}
+        <input type="submit" value="save" >
+    </form>
+    ```
+#### the second method #####(the best way)
+we will use the data from `models` to make the form (it's like a combination between method 1 and 2)
+
+1. go to `forms.py` and call the models :
+```
+from .models import Login
+
+class LoginForm(forms.ModelForm):
+    class Meta:
+        model = Login
+        fields = '__all__'
+        # or : fields = ['username']
+        
+``` 
+2. the `models.py` will stay as it is :
+    ```
+    from django.db import models
+
+    class Login(models.Model):
+        username = models.CharField(max_length=20)
+        password = models.CharField(max_length=20, blank=False)
+    ```
+3. the `views.py` will be like this :
+    ```
+    def about(request):
+        dataform = LoginForm(request.POST)
+        dataform.save()
+        return render(request,'mainpage/about.html' , {'LF' : LoginForm})
+    ```
 
