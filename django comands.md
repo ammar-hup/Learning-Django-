@@ -4,25 +4,25 @@ Here are some useful commands and tips for working with Django.
 
 To check the installed Django version:
 
-    ```
-    py -m django --version
-    ```
+```
+py -m django --version
+```
 
-    To create a new Django project:
+To create a new Django project:
 
-    ```
-    django-admin startproject mysite
-    ```
+```
+django-admin startproject mysite
+```
 
-    To start the server:
+To start the server:
 
-    ```
-    py manage.py runserver
-    ```
+```
+py manage.py runserver
+```
 
-    To create a new app:
+To create a new app:
 
-    ```
+```
 py manage.py startapp polls
 ```
 
@@ -36,10 +36,10 @@ To create a new template:
 4. Go to `DIRS` section and add the HTML templates folder path to it (`os.path.join(BASE_DIR,'templates')`)
 5. Go to the views file in the page and use a function to return the template:
 
-    ```
-    def index(request):
-        return render(request,'mainpage/index.html')
-    ```
+```
+def index(request):
+    return render(request,'mainpage/index.html')
+```
 
 To make a base template file and inherit it in other HTML files:
 
@@ -51,18 +51,18 @@ To make a base template file and inherit it in other HTML files:
 6. To write HTML code in the file that has the extend line (`{% extends 'base.html' %}`), you need to use the block element 
 7. The block element has an opening and closing tag, like this:
 
-    ```
-    {% block (block name) %}
-        content
-    {% endblock %}
-    ```
+```
+{% block (block name) %}
+	content
+{% endblock %}
+```
 
 8. Then, you should go to the `base.html` (the parent file) and add the two blocks (start and end):
 
-    ```
-    {% block content %}
-    {% endblock content %}
-    ```
+```
+{% block content %}
+{% endblock content %}
+```
 
 If you want to make a footer or a navbar and use it in all pages of your project:
 
@@ -75,19 +75,19 @@ If you want to make a footer or a navbar and use it in all pages of your project
 
 To use `if`, `elif`, `else`, `for` with HTML by blocks:
 
-    ```
-    {% if name == 'ammar' %}
-        <h1> hi <h1>
-    {% elif name == 'ammar' %}
-        <h1> no <h1>
-    {% else %}
-        <h1> not found <h1>
-    {% endif %}
+```
+{% if name == 'ammar' %}
+	<h1> hi <h1>
+{% elif name == 'ammar' %}
+	<h1> no <h1>
+{% else %}
+	<h1> not found <h1>
+{% endif %}
 
-    {% for x in name %}
-        <p>{{x}}<p>
-    {% endfor %}
-    ```
+{% for x in name %}
+	<p>{{x}}<p>
+{% endfor %}
+```
 
 ## Static Files
 
@@ -117,24 +117,24 @@ To enable these files to your HTML:
 
 1. Go to your HTML file (`base.html` for example) and write these two lines:
 
-    ```
-    {% load static %}
-    ```
+```
+{% load static %}
+```
 
 2. Then, add the file that you want (image/CSS/JS) by its tag in HTML (for example, here we add CSS file):
 
-    ```
-    <link rel="stylesheet" href="{% static 'css\style.css' %}">
-    ```
+```
+<link rel="stylesheet" href="{% static 'css\style.css' %}">
+```
 
 If you want to add an image, you should first put the image in the `static/images` folder in the project, then use:
 
-    ```
-    {% load static %}
-    {% block content %}
-    <img src="{% static 'image/male.png' %}" alt="not found!">
-    {% endblock content %}
-    ```
+```
+{% load static %}
+{% block content %}
+<img src="{% static 'image/male.png' %}" alt="not found!">
+{% endblock content %}
+```
 
 ## Models and Database
 
@@ -146,16 +146,16 @@ To work with models (database):
 5. We will use the `models` which is imported by Django and it has all fields we need
 6. The code will be something like this:
 
-    ```
-    from django.db import models
+```
+from django.db import models
 
-    class Product(models.Model):
-        name = models.CharField(max_length=50,verbose_name'Title',default = 'Name')    # the product name
-        content = models.TextField(null = True, blank = True)              # the product content
-        price = models.DecimalField(max_digits=6,decimal_places=2)    # product price
-        image = models.ImageField(upload_to='photos/%y/%m/%d')        # product image
-        active = models.BooleanField(default=True)               # product status (active / not active)
-    ```
+class Product(models.Model):
+    name = models.CharField(max_length=50,verbose_name'Title',default = 'Name')    # the product name
+    content = models.TextField(null = True, blank = True)              # the product content
+    price = models.DecimalField(max_digits=6,decimal_places=2)    # product price
+    image = models.ImageField(upload_to='photos/%y/%m/%d')        # product image
+    active = models.BooleanField(default=True)               # product status (active / not active)
+```
 7. Go to the settings file and add your new app to the INSTALLED_APPS list.
 8. To add the Product class to the database, run the following commands:
 8. `py manage.py makemigrations` to create a new migration file.
@@ -171,10 +171,10 @@ To make an administration account and manage your products:
 2. Then, choose a name, email, and password
 3. Run the server and go to `/admin`
 4. to view the products name on cards you can use :
-    ```
-    def __str__(self):
-            return self.name    
-    ```
+```
+def __str__(self):
+        return self.name    
+```
 5. to change anything in the `products` group you can use the Meta class:
     ```
     class Meta :
